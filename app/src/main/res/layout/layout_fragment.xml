@@ -9,16 +9,20 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context=".MainActivity">
+        android:layout_height="match_parent">
 
-        <com.egiwon.circularloopviewpager.CircularViewPager
-            android:id="@+id/vp_fragment"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tv_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="45dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="TEST"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
