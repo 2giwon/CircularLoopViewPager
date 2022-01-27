@@ -19,30 +19,6 @@ class MainActivity : AppCompatActivity() {
 
         val tabTitles = listOf("A", "B", "C")
 
-        binding.vpFragment.setPageCount(tabTitles.size)
-        binding.vpFragment.setFragmentPagerAdapter(supportFragmentManager, object: CircularViewPager.FragmentItemListener {
-            override fun getFragment(position: Int): Fragment {
-                return TestFragment.newInstance(tabTitles[position])
-            }
-
-        })
-
-//        binding.vpFragment.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(binding.tlTab))
-//
-//        tabTitles.forEach {
-//            binding.tlTab.addTab(binding.tlTab.newTab().setText(it))
-//        }
-//
-//        binding.tlTab.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
-//            override fun onTabSelected(tab: TabLayout.Tab) {
-//                binding.vpFragment.currentItem = tab.position
-//            }
-//
-//            override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
-//            override fun onTabReselected(tab: TabLayout.Tab?) = Unit
-//
-//        })
-
 
     }
 }
