@@ -8,6 +8,8 @@ interface FragmentAdapterManger {
 
     fun convertTabIndex(viewPagerIndex: Int): Int
 
+    fun getLastAddedFragmentIndex(selectedPosition: Int, currentPosition: Int): Int
+
     fun getMenuData(): Collection<String>
 
     fun isShowingStartingTab(currentPosition: Int): Boolean
