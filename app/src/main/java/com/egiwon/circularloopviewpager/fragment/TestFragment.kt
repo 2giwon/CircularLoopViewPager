@@ -1,5 +1,6 @@
 package com.egiwon.circularloopviewpager.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.egiwon.circularloopviewpager.R
 import com.egiwon.circularloopviewpager.databinding.LayoutFragmentBinding
+import kotlin.random.Random
 
 class TestFragment: Fragment() {
 
@@ -27,6 +29,10 @@ class TestFragment: Fragment() {
 
         arguments?.let {
             val text = it.getString(TEXT, "")
+            val color: Int =
+                Color.argb(255, (0..255).random(), (0..255).random(), (0..255).random())
+
+            binding.layout.setBackgroundColor(color)
             binding.tvText.text = text
         }
     }
