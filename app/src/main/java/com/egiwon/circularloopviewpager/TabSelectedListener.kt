@@ -9,15 +9,33 @@ class TabSelectedListener(
     private val helper: CircularLoopTabAdapter,
     private val context: Context
 ): TabLayout.OnTabSelectedListener {
-    override fun onTabSelected(tab: TabLayout.Tab?) {
+    override fun onTabSelected(tab: TabLayout.Tab) {
+        try {
+            val currentPosition = viewPager.currentItem
+            val selectedTabPosition = tab.position
+            if (selectedTabPosition != helper.convertTabIndex(currentPosition)) {
+                viewPager.currentItem =
+                    helper.getLastAddedFragmentIndex(selectedTabPosition, currentPosition)
+            }
+        } catch (e: Exception) {
 
+        }
     }
 
     override fun onTabUnselected(tab: TabLayout.Tab?) {
 
     }
 
-    override fun onTabReselected(tab: TabLayout.Tab?) {
+    override fun onTabReselected(tab: TabLayout.Tab) {
+        try {
+            val currentPosition = viewPager.currentItem
+            val selectedTabPosition = tab.position
+            if (selectedTabPosition != helper.convertTabIndex(currentPosition)) {
+                viewPager.currentItem =
+                    helper.getLastAddedFragmentIndex(selectedTabPosition, currentPosition)
+            }
+        } catch (e: Exception) {
 
+        }
     }
 }
