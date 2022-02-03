@@ -17,8 +17,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val tabTitles = listOf("A", "B", "C")
+        val tabTitles = listOf("A", "B", "C", "D")
 
+        val adapter = CircularLoopTabAdapter(supportFragmentManager)
+        binding.vpFragment.adapter = adapter
+        binding.vpFragment.addOnPageChangeListener(
+            PageChangeListener(binding.tlTab, adapter)
+        )
 
+        tabTitles.forEach {
+            binding.tlTab.addTab(binding.tlTab.newTab().setText(it))
+        }
+
+        adapter.setMenuList(tabTitles)
+        adapter.notifyDataSetChanged()
+
+        val tabSelectedListener = TabSelectedListener(binding.vpFragment, adapter, this@MainActivity)
+        binding.vpFragment.currentItem = adapter.getStartingPagerIndex()
+        binding.tlTab.addOnTabSelectedListener(tabSelectedListener)
     }
 }
