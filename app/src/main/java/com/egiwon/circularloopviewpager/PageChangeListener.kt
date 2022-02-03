@@ -5,7 +5,7 @@ import com.google.android.material.tabs.TabLayout
 
 class PageChangeListener(
     private val tabLayout: TabLayout,
-    private val helper: BaseFragmentAdapterHelper
+    private val helper: FragmentAdapterManger
 ): ViewPager.OnPageChangeListener {
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
