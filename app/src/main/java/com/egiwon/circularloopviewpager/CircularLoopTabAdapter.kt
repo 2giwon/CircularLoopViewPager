@@ -22,11 +22,7 @@ class CircularLoopTabAdapter(
         return (`object` as Fragment).view === view
     }
 
-    fun getItem(position: Int): Fragment {
-        return helper.getInstance(position)
-    }
-
-    fun getTag(tabPosition: Int): String? =
+    private fun getTag(tabPosition: Int): String? =
         if (tabPosition < helper.menuData.size) helper.menuData[tabPosition] else null
 
     override fun clear() {
@@ -80,6 +76,25 @@ class CircularLoopTabAdapter(
 
                 currentTransaction?.setMaxLifecycle(fragment, Lifecycle.State.RESUMED)
                 currentPrimaryItem = fragment
+            }
+        } catch (e: Exception) {
+
+        }
+    }
+
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        try {
+            val tag = getTag(convertTabIndex(position))
+            val fragment = fragmentManager.findFragmentByTag(tag)
+            fragment?.let {
+                if (currentTransaction == null) {
+                    currentTransaction = fragmentManager.beginTransaction()
+                }
+
+                currentTransaction?.remove(it)
+                if (fragment === currentPrimaryItem) {
+                    currentPrimaryItem = null
+                }
             }
         } catch (e: Exception) {
 
