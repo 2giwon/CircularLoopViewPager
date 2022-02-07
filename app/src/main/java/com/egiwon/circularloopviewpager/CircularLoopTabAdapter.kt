@@ -2,6 +2,7 @@ package com.egiwon.circularloopviewpager
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -33,9 +34,7 @@ class CircularLoopTabAdapter(
         val tabPosition = helper.convertTabIndex(position)
         val tag: String? = getTag(tabPosition)
 
-        val fragment: Fragment? = tag?.let {
-            fragmentManager.findFragmentByTag(it)
-        }
+        val fragment: Fragment? = tag?.let(fragmentManager::findFragmentByTag)
 
         if (fragment != null) {
             return fragment
@@ -54,37 +53,13 @@ class CircularLoopTabAdapter(
         return stateFragment
     }
 
-    override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
-        val fragment = `object` as Fragment
-
-        try {
-            if (fragment != currentPrimaryItem) {
-                if (currentPrimaryItem != null) {
-                    currentPrimaryItem?.setMenuVisibility(false)
-                    if (currentTransaction == null) {
-                        currentTransaction = fragmentManager.beginTransaction()
-                    }
-                    currentTransaction?.setMaxLifecycle(
-                        requireNotNull(currentPrimaryItem), Lifecycle.State.STARTED
-                    )
-                }
-
-                fragment.setMenuVisibility(true)
-                if (currentTransaction == null) {
-                    currentTransaction = fragmentManager.beginTransaction()
-                }
-
-                currentTransaction?.setMaxLifecycle(fragment, Lifecycle.State.RESUMED)
-                currentPrimaryItem = fragment
-            }
-        } catch (e: Exception) {
-
-        }
-    }
-
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        val tabPosition = convertTabIndex(position)
+
+
         try {
-            val tag = getTag(convertTabIndex(position))
+            val tag = getTag(tabPosition) ?: return
+
             val fragment = fragmentManager.findFragmentByTag(tag)
             fragment?.let {
                 if (currentTransaction == null) {
@@ -96,9 +71,12 @@ class CircularLoopTabAdapter(
                     currentPrimaryItem = null
                 }
             }
+
         } catch (e: Exception) {
+            Toast.makeText(container.context, e.toString(), Toast.LENGTH_LONG).show()
 
         }
+
     }
 
     override fun finishUpdate(container: ViewGroup) {

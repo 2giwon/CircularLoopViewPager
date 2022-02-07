@@ -10,7 +10,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/purple_200">
 
         <TextView
             android:id="@+id/tv_text"
@@ -19,6 +20,7 @@
             android:textSize="45dp"
             android:textStyle="bold"
             android:textColor="@color/black"
+            android:text="A"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

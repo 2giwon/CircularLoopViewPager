@@ -16,6 +16,8 @@ class TabSelectedListener(
             if (selectedTabPosition != helper.convertTabIndex(currentPosition)) {
                 viewPager.currentItem =
                     helper.getLastAddedFragmentIndex(selectedTabPosition, currentPosition)
+//                val fragment: CurrentPage = (helper.getItem(selectedTabPosition) as CurrentPage)
+//                fragment.onSelectedPage(true)
             }
         } catch (e: Exception) {
 
