@@ -33,6 +33,8 @@ class CircularLoopTabAdapter(
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val tabPosition = helper.convertTabIndex(position)
         val tag: String? = getTag(tabPosition)
+        val viewPagerIndices = helper.tabIndexViewPagerIndexMap[tabPosition]
+        viewPagerIndices?.add(0, position)
 
         val fragment: Fragment? = tag?.let(fragmentManager::findFragmentByTag)
 
@@ -56,32 +58,64 @@ class CircularLoopTabAdapter(
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         val tabPosition = convertTabIndex(position)
 
+        if (helper.tabIndexViewPagerIndexMap.containsKey(tabPosition)) {
+            try {
+                helper.tabIndexViewPagerIndexMap[tabPosition]?.remove(position)
+                val allItemAtTabPosition = helper.tabIndexViewPagerIndexMap[tabPosition]
+                if (allItemAtTabPosition.isNullOrEmpty()) {
+                    val tag = getTag(tabPosition) ?: return
 
-        try {
-            val tag = getTag(tabPosition) ?: return
+                    val fragment = fragmentManager.findFragmentByTag(tag)
+                    fragment?.let {
+                        if (currentTransaction == null) {
+                            currentTransaction = fragmentManager.beginTransaction()
+                        }
 
-            val fragment = fragmentManager.findFragmentByTag(tag)
-            fragment?.let {
-                if (currentTransaction == null) {
-                    currentTransaction = fragmentManager.beginTransaction()
+                        currentTransaction?.remove(it)
+                        if (fragment === currentPrimaryItem) {
+                            currentPrimaryItem = null
+                        }
+                    }
                 }
 
-                currentTransaction?.remove(it)
-                if (fragment === currentPrimaryItem) {
-                    currentPrimaryItem = null
-                }
+            } catch (e: Exception) {
+                Toast.makeText(container.context, e.toString(), Toast.LENGTH_LONG).show()
+
             }
-
-        } catch (e: Exception) {
-            Toast.makeText(container.context, e.toString(), Toast.LENGTH_LONG).show()
-
         }
 
     }
 
+    override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
+        val fragment = `object` as Fragment
+        try {
+            if (fragment !== currentPrimaryItem) {
+                if (currentPrimaryItem != null) {
+                    currentPrimaryItem?.setMenuVisibility(false)
+                    if (currentTransaction == null) {
+                        currentTransaction = fragmentManager.beginTransaction()
+                    }
+                    currentTransaction?.setMaxLifecycle(
+                        requireNotNull(currentPrimaryItem), Lifecycle.State.STARTED
+                    )
+                }
+
+                fragment.setMenuVisibility(true)
+                if (currentTransaction == null) {
+                    currentTransaction = fragmentManager.beginTransaction()
+                }
+
+                currentTransaction?.setMaxLifecycle(fragment, Lifecycle.State.RESUMED)
+                currentPrimaryItem = fragment
+            }
+        } catch (e: Exception) {
+            Toast.makeText(container.context, e.toString(), Toast.LENGTH_LONG).show()
+        }
+    }
+
     override fun finishUpdate(container: ViewGroup) {
         if (currentTransaction != null) {
-            currentTransaction?.commitNowAllowingStateLoss()
+            currentTransaction?.commitNow()
             currentTransaction = null
         }
     }

@@ -10,6 +10,8 @@ class BaseFragmentAdapterHelper: FragmentAdapterManger, FragmentCreator {
 
     private val tabTitleFragmentMap = mutableMapOf<String, Fragment?>()
 
+    val tabIndexViewPagerIndexMap = mutableMapOf<Int, MutableList<Int>>()
+
     override fun getStartingPagerIndex(): Int {
         val menuSize = _menuData.size
         val startingTabIndex = 0
@@ -20,6 +22,11 @@ class BaseFragmentAdapterHelper: FragmentAdapterManger, FragmentCreator {
     override fun setMenuList(menuList: List<String>?) {
         _menuData.clear()
         menuList?.let(_menuData::addAll)
+
+        tabIndexViewPagerIndexMap.clear()
+        for (i in menuData.indices) {
+            tabIndexViewPagerIndexMap[i] = mutableListOf()
+        }
     }
 
     override fun convertTabIndex(viewPagerIndex: Int): Int {
@@ -27,7 +34,13 @@ class BaseFragmentAdapterHelper: FragmentAdapterManger, FragmentCreator {
     }
 
     override fun getLastAddedFragmentIndex(selectedPosition: Int, currentPosition: Int): Int {
-        return currentPosition / menuData.size * menuData.size + selectedPosition
+        val viewPagerIndexList = tabIndexViewPagerIndexMap[selectedPosition]
+
+        return if (viewPagerIndexList.isNullOrEmpty()) {
+            currentPosition / menuData.size * menuData.size + selectedPosition
+        } else {
+            viewPagerIndexList.first()
+        }
     }
 
     override fun getMenuData(): Collection<String> {
@@ -50,6 +63,7 @@ class BaseFragmentAdapterHelper: FragmentAdapterManger, FragmentCreator {
     override fun clear() {
         _menuData.clear()
         tabTitleFragmentMap.clear()
+        tabIndexViewPagerIndexMap.clear()
     }
 
     override fun getInstance(position: Int): Fragment {
